@@ -15,13 +15,16 @@ Tensorflow
 
 clockshortenstream (https://github.com/BitFloyd/clockshortenstream)
 
+
+**Installation**
+===================
+Navigate to the deepsbd folder
+
+
+pip install -e .
+
 Usage Example:
 ------------------
-
-*Installation*
-
-Navigate to the deepsbd folder
-pip install -e .
 
 ```
 
