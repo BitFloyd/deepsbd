@@ -17,7 +17,14 @@ clockshortenstream (https://github.com/BitFloyd/clockshortenstream)
 
 Usage Example:
 ------------------
+
+*Installation*
+
+Navigate to the deepsbd folder
+pip install -e .
+
 ```
+
 from deepsbd.video_to_shots import VideoToShots
 
 video_path = 'video.mp4'
