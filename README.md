@@ -15,9 +15,19 @@ Tensorflow
 
 clockshortenstream (https://github.com/BitFloyd/clockshortenstream)
 
+
+**Installation**
+===================
+Navigate to the deepsbd folder
+
+
+pip install -e .
+
 Usage Example:
 ------------------
+
 ```
+
 from deepsbd.video_to_shots import VideoToShots
 
 video_path = 'video.mp4'
