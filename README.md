@@ -3,7 +3,7 @@ This is a package to do shot boundary detection on videos.
 
 Required packages:
 ------------------
-keras-squeezenet
+keras-squeezenet (https://github.com/BitFloyd/keras-squeezenet)
 
 cv2
 
