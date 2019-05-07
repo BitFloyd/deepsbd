@@ -4,9 +4,8 @@ from config import frame_size,grad_n_frames_per_sample
 import numpy as np
 import cv2
 from SIM_generator_class import SIMGenerator
+from threading import Thread
 
-
-simgen = SIMGenerator(grad_n_frames_per_sample)
 
 def read_cuboid_from_video_cut_detection(video_path, frame_nums_list):
     fReader = FrameReader(pathToVideo=video_path)
@@ -48,10 +47,36 @@ def read_frame_cuboid_from_video_grad(video_path, frame_candidate):
     return frames
 
 
-def get_SIM_for_grad_candidate(video_path,frame_candidate):
+def get_SIM_for_grad_candidate(video_path,frame_candidate,simgen):
 
     grad_cuboid = read_frame_cuboid_from_video_grad(video_path,frame_candidate)
     sim = simgen.createFullSIM(grad_cuboid)
     sim = np.expand_dims(sim,axis=0)
 
     return sim
+
+class PredictGradThread(Thread):
+
+    def __init__(self,grads,candidate,path_to_video,grad_model):
+        Thread.__init__(self)
+        self.daemon = True
+        self.grads = grads
+        self.path_to_video = path_to_video
+        self.candidate = candidate
+        self.grad_model = grad_model
+        self.finished = False
+
+    def run(self):
+        simgen = SIMGenerator(grad_n_frames_per_sample)
+        frame_start = get_frame_start_for_grad_cuboids(self.candidate)
+        sim_image = get_SIM_for_grad_candidate(video_path=self.path_to_video, frame_candidate=self.candidate,simgen=simgen)
+        prediction = self.grad_model.predict(sim_image)
+
+        class_output = prediction[0][0]
+        reg_output = prediction[1][0]
+
+        if (class_output > 0.5):
+            self.grads.append(frame_start + np.int(reg_output * grad_n_frames_per_sample))
+
+        self.finished = True
+
