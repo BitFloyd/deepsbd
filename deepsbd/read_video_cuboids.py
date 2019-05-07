@@ -55,12 +55,12 @@ def get_SIM_for_grad_candidate(video_path,frame_candidate,simgen):
 
     return sim
 
-class PredictGradThread(Thread):
+class AppendSIMThread(Thread):
 
     def __init__(self,grads,candidate,path_to_video,grad_model):
         Thread.__init__(self)
         self.daemon = True
-        self.grads = grads
+        self.sims = sims
         self.path_to_video = path_to_video
         self.candidate = candidate
         self.grad_model = grad_model
@@ -70,13 +70,8 @@ class PredictGradThread(Thread):
         simgen = SIMGenerator(grad_n_frames_per_sample)
         frame_start = get_frame_start_for_grad_cuboids(self.candidate)
         sim_image = get_SIM_for_grad_candidate(video_path=self.path_to_video, frame_candidate=self.candidate,simgen=simgen)
-        prediction = self.grad_model.predict(sim_image)
+        self.sims.append((sim_image,frame_start))
 
-        class_output = prediction[0][0]
-        reg_output = prediction[1][0]
-
-        if (class_output > 0.5):
-            self.grads.append(frame_start + np.int(reg_output * grad_n_frames_per_sample))
 
         self.finished = True
 

@@ -2,7 +2,7 @@ from framefilter import perform_frame_filtration
 from keras.models import load_model
 from config import n_frame_added,cut_detector,grad_detector,grad_n_frames_per_sample,grad_n_threads
 from read_video_cuboids import read_cuboid_from_video_cut_detection,get_SIM_for_grad_candidate
-from read_video_cuboids import get_frame_start_for_grad_cuboids, PredictGradThread
+from read_video_cuboids import get_frame_start_for_grad_cuboids, AppendSIMThread
 import os
 import numpy as np
 import time
@@ -67,6 +67,7 @@ class VideoToShots:
         grad_model = load_model(grad_detector)
         grad_model.summary()
         self.grads = []
+        self.sims = []
 
         if(self.verbose):
             print "###################################################"
@@ -80,7 +81,7 @@ class VideoToShots:
         for split in tqdm(candidates_no_cut_split):
 
             for i in tqdm(split):
-                n_threads_running.append(PredictGradThread(self.grads,i,self.path_to_video,grad_model))
+                n_threads_running.append(AppendSIMThread(self.sims,i,self.path_to_video))
                 time.sleep(1)
                 n_threads_running[-1].start()
 
@@ -88,6 +89,17 @@ class VideoToShots:
                 time.sleep(1)
 
             n_threads_running = []
+
+        for i in self.sims:
+            sim_image,frame_start = i
+            prediction = grad_model.predict(sim_image)
+
+            class_output = prediction[0][0]
+            reg_output = prediction[1][0]
+
+            if (class_output > 0.5):
+                self.grads.append(frame_start + np.int(reg_output * grad_n_frames_per_sample))
+
 
 
         # for i in tqdm(self.candidates_no_cut):
