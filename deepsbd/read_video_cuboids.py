@@ -57,13 +57,12 @@ def get_SIM_for_grad_candidate(video_path,frame_candidate,simgen):
 
 class AppendSIMThread(Thread):
 
-    def __init__(self,grads,candidate,path_to_video,grad_model):
+    def __init__(self,sims,candidate,path_to_video):
         Thread.__init__(self)
         self.daemon = True
         self.sims = sims
         self.path_to_video = path_to_video
         self.candidate = candidate
-        self.grad_model = grad_model
         self.finished = False
 
     def run(self):
