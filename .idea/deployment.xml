@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PublishConfigData" serverName="rocket">
+    <serverData>
+      <paths name="rocket">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/usr/local/data01/sejacob/PhD_Repo/deepsbd" local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+    </serverData>
+  </component>
+</project>
