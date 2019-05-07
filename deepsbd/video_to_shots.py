@@ -81,6 +81,7 @@ class VideoToShots:
 
             for i in tqdm(split):
                 n_threads_running.append(PredictGradThread(self.grads,i,self.path_to_video,grad_model))
+                time.sleep(1)
                 n_threads_running[-1].start()
 
             while self.are_any_threads_running(n_threads_running):
