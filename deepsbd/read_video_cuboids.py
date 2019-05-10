@@ -46,13 +46,12 @@ def read_frame_cuboid_from_video_grad(video_path, frame_candidate):
     return frames
 
 
-def get_SIM_for_grad_candidate(video_path,frame_candidate,simgen):
+def get_cuboid_for_grad_candidate(video_path,frame_candidate):
 
     grad_cuboid = read_frame_cuboid_from_video_grad(video_path,frame_candidate)
-    sim = simgen.createFullSIM(grad_cuboid)
-    sim = np.expand_dims(sim,axis=0)
+    grad_cuboid = np.expand_dims(grad_cuboid,axis=0)
 
-    return sim
+    return grad_cuboid
 
 class AppendCUBThread(Thread):
 
@@ -67,7 +66,7 @@ class AppendCUBThread(Thread):
     def run(self):
 
         frame_start = get_frame_start_for_grad_cuboids(self.candidate)
-        grad_cuboid = read_frame_cuboid_from_video_grad(self.path_to_video, self.candidate)
+        grad_cuboid = get_cuboid_for_grad_candidate(self.path_to_video, self.candidate)
         self.cubs.append((grad_cuboid,frame_start))
 
 
