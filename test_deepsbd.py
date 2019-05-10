@@ -1,6 +1,6 @@
 from deepsbd.video_to_shots import VideoToShots
 
-video_name = 'FP.mkv'
+video_name = 'FP.mp4'
 
 vts = VideoToShots(path_to_video=video_name)
 vts.fit()

@@ -2,7 +2,7 @@
 <project version="4">
   <component name="WebServers">
     <option name="servers">
-      <webServer id="dcddf9ab-2892-4158-bcf0-00f9df7cf560" name="rocket" url="http://rocket.cim.mcgill.ca">
+      <webServer id="1a46c4c1-4d63-4473-aadf-8d17d8d3a3e5" name="rocket" url="http://rocket.cim.mcgill.ca">
         <fileTransfer host="rocket.cim.mcgill.ca" port="22" accessType="SFTP">
           <advancedOptions>
             <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />

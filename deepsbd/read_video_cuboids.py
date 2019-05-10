@@ -3,7 +3,6 @@ from skimage.transform import resize
 from config import frame_size,grad_n_frames_per_sample
 import numpy as np
 import cv2
-from SIM_generator_class import SIMGenerator
 from threading import Thread
 
 
