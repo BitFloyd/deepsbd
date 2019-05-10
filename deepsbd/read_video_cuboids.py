@@ -55,21 +55,21 @@ def get_SIM_for_grad_candidate(video_path,frame_candidate,simgen):
 
     return sim
 
-class AppendSIMThread(Thread):
+class AppendCUBThread(Thread):
 
-    def __init__(self,sims,candidate,path_to_video):
+    def __init__(self,cubs,candidate,path_to_video):
         Thread.__init__(self)
         self.daemon = True
-        self.sims = sims
+        self.cubs = cubs
         self.path_to_video = path_to_video
         self.candidate = candidate
         self.finished = False
 
     def run(self):
-        simgen = SIMGenerator(grad_n_frames_per_sample)
+
         frame_start = get_frame_start_for_grad_cuboids(self.candidate)
-        sim_image = get_SIM_for_grad_candidate(video_path=self.path_to_video, frame_candidate=self.candidate,simgen=simgen)
-        self.sims.append((sim_image,frame_start))
+        grad_cuboid = read_frame_cuboid_from_video_grad(self.path_to_video, self.candidate)
+        self.cubs.append((grad_cuboid,frame_start))
 
 
         self.finished = True

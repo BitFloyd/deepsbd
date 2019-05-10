@@ -1,4 +1,7 @@
 import os
+import multiprocessing
+
+
 # ================================== #
 # Cut Detector
 # ================================== #
@@ -16,4 +19,4 @@ grad_n_frames_per_sample = 60
 grad_batch_size = 256
 grad_detector = os.path.join(os.path.split(os.path.realpath(__file__))[0],'grad_detector.h5')
 grad_num_iteration_in_one_epoch = 1e2
-grad_n_threads = 8
+grad_n_threads = multiprocessing.cpu_count() - 3
