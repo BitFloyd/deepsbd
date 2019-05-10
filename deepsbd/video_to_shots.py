@@ -1,19 +1,20 @@
-from framefilter import perform_frame_filtration
-from keras.models import load_model
-from config import n_frame_added,cut_detector,grad_detector,grad_n_frames_per_sample,grad_n_threads
-from read_video_cuboids import read_cuboid_from_video_cut_detection
-from read_video_cuboids import AppendCUBThread
 import os
-import numpy as np
 import time
-from clockshortenstream.process_video_pkg.frame_writer import FrameWriter
+
+import numpy as np
 from clockshortenstream.process_video_pkg.frame_reader import Stream
+from clockshortenstream.process_video_pkg.frame_writer import FrameWriter
+from keras.models import load_model
 from tqdm import tqdm
+
+from config import cut_detector, grad_detector, grad_n_frames_per_sample, grad_n_threads, cut_n_threads
+from framefilter import perform_frame_filtration
+from read_video_cuboids import AppendCUBThread, AppendCUTCUBThread
 
 
 class VideoToShots:
 
-    def __init__(self,path_to_video,verbose=True):
+    def __init__(self, path_to_video, verbose=True):
         self.path_to_video = path_to_video
         self.candidates = []
         self.cuts = []
@@ -29,33 +30,45 @@ class VideoToShots:
 
     def perform_cut_detection(self):
 
-        if(self.verbose):
+        cut_model = load_model(cut_detector)
+        self.cuts = []
+        cubs = []
+
+        if (self.verbose):
             print "###################################################"
             print "PERFORMING CUT DETECTION"
             print "###################################################"
 
-        cut_model = load_model(cut_detector)
-        self.cuts = []
+        n_threads_running = []
 
-        for i in tqdm(self.candidates):
-            range_start = i - n_frame_added
-            range_end = i + n_frame_added
+        candidates_cut_split = np.array_split(self.candidates,
+                                              len(self.candidates) / cut_n_threads + 1)
 
-            frame_nums_list = range(range_start, range_end + 1)
+        for split in tqdm(candidates_cut_split):
 
-            cuboid = read_cuboid_from_video_cut_detection(video_path=self.path_to_video, frame_nums_list=frame_nums_list)
+            for i in tqdm(split):
+                n_threads_running.append(AppendCUTCUBThread(cubs, i, self.path_to_video))
+                n_threads_running[-1].start()
 
-            prediction = cut_model.predict(cuboid)[0][0]
+            while self.are_any_threads_running(n_threads_running):
+                time.sleep(0.0001)
 
-            if(prediction>0.5):
-                self.cuts.append(i)
+            n_threads_running = []
+
+        for i in cubs:
+            cub, frame = i
+            prediction = cut_model.predict(cub)
+
+            class_output = prediction[0][0]
+
+            if (class_output > 0.5):
+                self.cuts.append(frame)
             else:
-                self.candidates_no_cut.append(i)
-
+                self.candidates_no_cut.append(frame)
 
         return True
 
-    def are_any_threads_running(self,n_threads_running):
+    def are_any_threads_running(self, n_threads_running):
         for thread in n_threads_running:
             if thread.finished == False:
                 return True
@@ -68,28 +81,29 @@ class VideoToShots:
         self.grads = []
         cubs = []
 
-        if(self.verbose):
+        if (self.verbose):
             print "###################################################"
             print "PERFORMING GRAD DETECTION"
             print "###################################################"
 
         n_threads_running = []
 
-        candidates_no_cut_split = np.array_split(self.candidates_no_cut, len(self.candidates_no_cut)/grad_n_threads + 1)
+        candidates_no_cut_split = np.array_split(self.candidates_no_cut,
+                                                 len(self.candidates_no_cut) / grad_n_threads + 1)
 
         for split in tqdm(candidates_no_cut_split):
 
             for i in tqdm(split):
-                n_threads_running.append(AppendCUBThread(cubs,i,self.path_to_video))
+                n_threads_running.append(AppendCUBThread(cubs, i, self.path_to_video))
                 n_threads_running[-1].start()
 
             while self.are_any_threads_running(n_threads_running):
-                time.sleep(1)
+                time.sleep(0.0001)
 
             n_threads_running = []
 
         for i in cubs:
-            cub,frame_start = i
+            cub, frame_start = i
             prediction = grad_model.predict(cub)
 
             class_output = prediction[0][0]
@@ -113,11 +127,11 @@ class VideoToShots:
 
         return self.full_trans
 
-    def get_video_name_from_id(self,video_id):
+    def get_video_name_from_id(self, video_id):
 
-        return 'shot_'+str(video_id)+'.mp4'
+        return 'shot_' + str(video_id) + '.mp4'
 
-    def save_video_as_shots(self,out_path_for_video):
+    def save_video_as_shots(self, out_path_for_video):
 
         if not (os.path.exists(out_path_for_video)):
             os.mkdir(out_path_for_video)
@@ -125,31 +139,31 @@ class VideoToShots:
         video_id = 0
         video_name = self.get_video_name_from_id(video_id)
 
-        fReader = Stream(self.path_to_video,time_resolution=None)
+        fReader = Stream(self.path_to_video, time_resolution=None)
         frame = fReader.readNextFrameFromVideo()
 
-        fWriter = FrameWriter(out_path_for_video,video_name,frame_size=(frame.shape[0],frame.shape[1]),video_fps=fReader.frameReader.videoFPS)
+        fWriter = FrameWriter(out_path_for_video, video_name, frame_size=(frame.shape[0], frame.shape[1]),
+                              video_fps=fReader.frameReader.videoFPS)
         fWriter.openVideoStream()
 
         trans_to_write = list(self.full_trans)
 
         trans_to_write.append(fReader.frameReader.numFrames)
 
-
         while len(trans_to_write) > 0 and not fReader.videoFinished:
             fWriter.writeFrameToVideo(frame)
 
-            if(fReader.frameReader.frameNumber ==trans_to_write[0]):
+            if (fReader.frameReader.frameNumber == trans_to_write[0]):
                 fWriter.closeVideoStream()
                 trans_to_write.pop(0)
-                if(not len(trans_to_write)>0):
+                if (not len(trans_to_write) > 0):
                     break
-                video_id+=1
-                video_name=self.get_video_name_from_id(video_id)
-                fWriter=FrameWriter(out_path_for_video,video_name,frame_size=(frame.shape[0],frame.shape[1]),video_fps=fReader.frameReader.videoFPS)
+                video_id += 1
+                video_name = self.get_video_name_from_id(video_id)
+                fWriter = FrameWriter(out_path_for_video, video_name, frame_size=(frame.shape[0], frame.shape[1]),
+                                      video_fps=fReader.frameReader.videoFPS)
                 fWriter.openVideoStream()
 
             frame = fReader.readNextFrameFromVideo()
-
 
         return True
