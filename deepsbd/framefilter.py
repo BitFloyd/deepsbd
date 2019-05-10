@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
+from config import scale_merge_interval
 from clockshortenstream.process_video_pkg.frame_reader import Stream
 from keras.applications.imagenet_utils import preprocess_input
 from keras_squeezenet import SqueezeNet
@@ -137,7 +138,7 @@ def perform_frame_filtration(path_to_video):
 
         candidates_scale_dict[scale] = candidates_in_scale
 
-    list_frame_candidates = merge_scales(candidates_scale_dict, interval=5)
+    list_frame_candidates = merge_scales(candidates_scale_dict, interval=scale_merge_interval)
 
     return list_frame_candidates
 
