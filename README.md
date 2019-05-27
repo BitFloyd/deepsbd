@@ -31,7 +31,8 @@ Usage Example:
 from deepsbd.video_to_shots import VideoToShots
 
 video_path = 'video.mp4'
-vts = VideoToShots(path_to_video)
+directory_to_save_shots_in = 'shots'
+vts = VideoToShots(video_path)
 
 #Perform fit
 vts.fit()
@@ -39,5 +40,12 @@ vts.fit()
 print "Transition Candidates: " vts.candidates
 print "Cut Transitions: ",vts.cuts
 print "Gradual Transitions:", vts.grads
+
+print "##############################################"
+print "ALL_TRANSITION_FRAMES:"
+print vts.full_trans
+print "##############################################"
+
+vts.save_video_as_shots(directory_to_save_shots_in)
 
 ```
