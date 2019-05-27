@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
-from config import scale_merge_interval
+from config import scale_merge_interval, frame_size
+import cv2
 from clockshortenstream.process_video_pkg.frame_reader import Stream
 from keras.applications.imagenet_utils import preprocess_input
 from keras_squeezenet import SqueezeNet
@@ -23,6 +24,7 @@ def features_from_video(path_to_video):
     pbar = tqdm(total=stream.num_read_iterations)
 
     frame = stream.readNextFrameFromVideo()
+    frame = cv2.resize(frame, frame_size)
     while (not stream.videoFinished):
         list_features.append(squeezenet_feature_from_frame(sqnet, frame))
         frame = stream.readNextFrameFromVideo()
