@@ -15,12 +15,13 @@ def read_cuboid_from_video_cut_detection(video_path, frame_nums_list):
 
     for frame_num in frame_nums_list:
         frame = fReader.getFrameAtFrameNumber(frame_num)
-        frame_resized = resize(frame, frame_size)
+        frame_resized = cv2.resize(frame, frame_size)
         frames.append(frame_resized)
 
     fReader.closeFrameReader()
 
     cuboid = np.array(frames)
+    cuboid = cuboid/255.0
     cuboid = np.expand_dims(cuboid, axis=0)
 
     return cuboid
@@ -38,7 +39,7 @@ def read_frame_cuboid_from_video_grad(video_path, frame_candidate):
     frames = fReader.getNumberOfFramesFromPosition(start_frame_id=frame_start,
                                                    num_frames=grad_n_frames_per_sample)
     for idx, frame in enumerate(frames):
-        frames[idx] = cv2.resize(frame, frame_size)
+        frames[idx] = (cv2.resize(frame, frame_size))/255.0
 
     fReader.closeFrameReader()
 
