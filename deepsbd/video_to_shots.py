@@ -35,9 +35,9 @@ class VideoToShots:
         cubs = []
 
         if (self.verbose):
-            print "###################################################"
-            print "PERFORMING CUT DETECTION"
-            print "###################################################"
+            print ("###################################################")
+            print ("PERFORMING CUT DETECTION")
+            print ("###################################################")
 
         n_threads_running = []
 
@@ -82,9 +82,9 @@ class VideoToShots:
         cubs = []
 
         if (self.verbose):
-            print "###################################################"
-            print "PERFORMING GRAD DETECTION"
-            print "###################################################"
+            print ("###################################################")
+            print ("PERFORMING GRAD DETECTION")
+            print ("###################################################")
 
         n_threads_running = []
 
