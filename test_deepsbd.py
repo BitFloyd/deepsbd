@@ -16,9 +16,9 @@ svs.shorten_video_stream(path_to_output_video=path_to_shortened_video)
 vts = VideoToShots(path_to_video=path_to_shortened_video)
 vts.fit()
 
-print "##############################################"
-print "FULL_TRANS:"
-print vts.full_trans
-print "##############################################"
+print ("##############################################")
+print ("FULL_TRANS:")
+print (vts.full_trans)
+print ("##############################################")
 
 vts.save_video_as_shots(directory_to_save_clips)
