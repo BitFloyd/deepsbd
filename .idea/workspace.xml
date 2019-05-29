@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="958eb3cf-8cb3-4366-ab26-a2cc8b91e0d6" name="Default Changelist" comment="new detectors added">
-      <change beforePath="$PROJECT_DIR$/test_deepsbd.py" beforeDir="false" afterPath="$PROJECT_DIR$/test_deepsbd.py" afterDir="false" />
+    <list default="true" id="958eb3cf-8cb3-4366-ab26-a2cc8b91e0d6" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -12,14 +12,20 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/test_deepsbd.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="15">
-              <caret line="1" column="106" selection-start-line="1" selection-start-column="84" selection-end-line="1" selection-end-column="106" />
-              <folding>
-                <element signature="e#0#47#0" expanded="true" />
-              </folding>
+            <state>
+              <caret column="47" selection-start-column="35" selection-end-column="47" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/deepsbd/video_to_shots.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="135">
+              <caret line="9" column="5" lean-forward="true" selection-start-line="9" selection-start-column="5" selection-end-line="9" selection-end-column="5" />
             </state>
           </provider>
         </entry>
@@ -38,12 +44,12 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/deepsbd/video_to_shots.py" />
         <option value="$PROJECT_DIR$/deepsbd/config.py" />
         <option value="$PROJECT_DIR$/deepsbd/framefilter.py" />
         <option value="$PROJECT_DIR$/deepsbd/read_video_cuboids.py" />
         <option value="$PROJECT_DIR$/../DeepSBD/train_cut_detector.py" />
         <option value="$PROJECT_DIR$/test_deepsbd.py" />
+        <option value="$PROJECT_DIR$/deepsbd/video_to_shots.py" />
       </list>
     </option>
   </component>
@@ -80,15 +86,6 @@
             <path>
               <item name="deepsbd" type="b2602c69:ProjectViewProjectNode" />
               <item name="deepsbd" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="deepsbd" type="b2602c69:ProjectViewProjectNode" />
-              <item name="deepsbd" type="462c0819:PsiDirectoryNode" />
-              <item name="deepsbd" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="deepsbd" type="b2602c69:ProjectViewProjectNode" />
-              <item name="DeepSBD" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -134,6 +131,7 @@
       <workItem from="1558541695639" duration="1780000" />
       <workItem from="1558977108863" duration="864000" />
       <workItem from="1559066475454" duration="1048000" />
+      <workItem from="1559077255616" duration="1205000" />
     </task>
     <task id="LOCAL-00001" summary="second delay added to thread">
       <created>1557214451427</created>
@@ -226,17 +224,23 @@
       <option name="project" value="LOCAL" />
       <updated>1558977616145</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="prints fixed.">
+      <created>1559077288459</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1559077288459</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="15852000" />
+    <option name="totallyTimeSpent" value="17057000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1920" y="0" width="1920" height="1080" extended-state="6" />
-    <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2719017" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.27510685" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -269,7 +273,8 @@
     <MESSAGE value="fix cuboid dimensions" />
     <MESSAGE value="optimized imports" />
     <MESSAGE value="new detectors added" />
-    <option name="LAST_COMMIT_MESSAGE" value="new detectors added" />
+    <MESSAGE value="prints fixed." />
+    <option name="LAST_COMMIT_MESSAGE" value="prints fixed." />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/deepsbd/framefilter.py">
@@ -359,16 +364,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/deepsbd/video_to_shots.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1275">
-          <caret line="96" column="56" selection-start-line="96" selection-start-column="41" selection-end-line="96" selection-end-column="56" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../DeepSBD/train_cut_detector.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="358">
@@ -381,11 +376,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/test_deepsbd.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="1" column="106" selection-start-line="1" selection-start-column="84" selection-end-line="1" selection-end-column="106" />
-          <folding>
-            <element signature="e#0#47#0" expanded="true" />
-          </folding>
+        <state>
+          <caret column="47" selection-start-column="35" selection-end-column="47" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/deepsbd/video_to_shots.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="9" column="5" lean-forward="true" selection-start-line="9" selection-start-column="5" selection-end-line="9" selection-end-column="5" />
         </state>
       </provider>
     </entry>

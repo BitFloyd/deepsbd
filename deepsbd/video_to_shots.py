@@ -3,7 +3,7 @@ import time
 
 import numpy as np
 from clockshortenstream.process_video_pkg.frame_reader import Stream
-from clockshortenstream.process_video_pkg.frame_writer import FrameWriter
+from moviepy.editor import VideoFileClip
 from keras.models import load_model
 from tqdm import tqdm
 
@@ -137,33 +137,27 @@ class VideoToShots:
             os.mkdir(out_path_for_video)
 
         video_id = 0
+
         video_name = self.get_video_name_from_id(video_id)
 
         fReader = Stream(self.path_to_video, time_resolution=None)
-        frame = fReader.readNextFrameFromVideo()
 
-        fWriter = FrameWriter(out_path_for_video, video_name, frame_size=(frame.shape[0], frame.shape[1]),
-                              video_fps=fReader.frameReader.videoFPS)
-        fWriter.openVideoStream()
+        time_resolution = fReader.time_resolution
+
+        fReader.close_Stream()
 
         trans_to_write = list(self.full_trans)
 
+        trans_to_write = [-1]+[trans_to_write]
+
         trans_to_write.append(fReader.frameReader.numFrames)
 
-        while len(trans_to_write) > 0 and not fReader.videoFinished:
-            fWriter.writeFrameToVideo(frame)
+        for i,j in zip(trans_to_write,trans_to_write[1:]):
 
-            if (fReader.frameReader.frameNumber == trans_to_write[0]):
-                fWriter.closeVideoStream()
-                trans_to_write.pop(0)
-                if (not len(trans_to_write) > 0):
-                    break
-                video_id += 1
-                video_name = self.get_video_name_from_id(video_id)
-                fWriter = FrameWriter(out_path_for_video, video_name, frame_size=(frame.shape[0], frame.shape[1]),
-                                      video_fps=fReader.frameReader.videoFPS)
-                fWriter.openVideoStream()
+            clip = VideoFileClip(self.path_to_video).subclip(time_resolution*(i+1), time_resolution*(j))
+            clip.write_videofile(video_name)
+            video_id += 1
+            video_name = self.get_video_name_from_id(video_id)
 
-            frame = fReader.readNextFrameFromVideo()
 
         return True

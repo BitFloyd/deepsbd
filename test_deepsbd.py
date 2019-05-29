@@ -1,5 +1,5 @@
 from deepsbd.video_to_shots import VideoToShots
-from clockshortenstream.process_video_pkg.clock_processes import ShortenVideoStream,CommercialRemoverBasic
+from clockshortenstream.process_video_pkg.clock_processes import ShortenVideoStream
 
 
 video_name_full_match = '/usr/local/data/sejacob/PhD_Repo/test_data/2018-09-19-tor-ott-home.ts'
@@ -7,13 +7,11 @@ video_name_wo_commercial =  '/usr/local/data/sejacob/PhD_Repo/test_data/tor_ott_
 shortened_video = '/usr/local/data/sejacob/PhD_Repo/test_data/tor_ott_shortened.mp4'
 directory_to_save_clips = '/usr/local/data/sejacob/PhD_Repo/test_data/MATCH_CLIPS'
 
-commRemover = CommercialRemoverBasic(path_to_input_video=video_name_full_match,path_to_output_video=video_name_wo_commercial)
-commRemover.remove_frames_with_commercial_break_in_progress()
 
-svs = ShortenVideoStream(path_to_input_video=path_to_video_wo_commercial)
-svs.shorten_video_stream(path_to_output_video=path_to_shortened_video)
+svs = ShortenVideoStream(path_to_input_video=video_name_wo_commercial)
+svs.shorten_video_stream(path_to_output_video=shortened_video)
 
-vts = VideoToShots(path_to_video=path_to_shortened_video)
+vts = VideoToShots(path_to_video=shortened_video)
 vts.fit()
 
 print ("##############################################")
