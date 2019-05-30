@@ -4,6 +4,7 @@ from config import scale_merge_interval, frame_size
 import cv2
 from clockshortenstream.process_video_pkg.frame_reader import Stream
 from keras.applications.imagenet_utils import preprocess_input
+from keras.applications.resnet50 import ResNet50
 from keras_squeezenet import SqueezeNet
 from matplotlib.backends.backend_pdf import PdfPages
 from scipy.spatial.distance import cosine
@@ -24,8 +25,9 @@ def features_from_video(path_to_video):
     pbar = tqdm(total=stream.num_read_iterations)
 
     frame = stream.readNextFrameFromVideo()
-    frame = cv2.resize(frame, frame_size)
+
     while (not stream.videoFinished):
+        frame = cv2.resize(frame, frame_size)
         list_features.append(squeezenet_feature_from_frame(sqnet, frame))
         frame = stream.readNextFrameFromVideo()
         pbar.update(1)
@@ -38,7 +40,8 @@ def features_from_video(path_to_video):
 
 
 def get_sqnet():
-    sqnet = SqueezeNet(include_top=False)
+    # sqnet = SqueezeNet(include_top=False)
+    sqnet = ResNet50(include_top=False,pooling='avg')
 
     return sqnet
 

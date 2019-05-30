@@ -154,6 +154,7 @@ class VideoToShots:
 
         for i,j in zip(trans_to_write,trans_to_write[1:]):
 
+            print i,j
             clip = VideoFileClip(self.path_to_video).subclip(time_resolution*(i+1), time_resolution*(j))
             clip.write_videofile(video_name)
             video_id += 1
