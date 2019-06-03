@@ -40,8 +40,7 @@ def features_from_video(path_to_video):
 
 
 def get_sqnet():
-    # sqnet = SqueezeNet(include_top=False)
-    sqnet = ResNet50(include_top=False,pooling='avg')
+    sqnet = SqueezeNet(include_top=False,pooling='avg')
 
     return sqnet
 
