@@ -135,7 +135,7 @@ class VideoToShots:
 
     def get_srt_name(self, video_id):
 
-        return 'srt_' + str(video_id) + '.srt'
+        return 'shot_' + str(video_id) + '.srt'
 
     def save_video_as_shots(self, out_path_for_video):
 
