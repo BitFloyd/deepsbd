@@ -12,7 +12,7 @@ output_srt = '/usr/local/data/sejacob/PhD_Repo/test_data/shortened_video.srt'
 svs = ShortenVideoStream(path_to_input_video=input_video,path_to_input_srt=input_srt,commercial_removed=False)
 svs.shorten_video_stream(path_to_output_video=output_video,path_to_output_srt=output_srt)
 
-vts = VideoToShots(path_to_video=shortened_video)
+vts = VideoToShots(path_to_video=output_video)
 vts.fit()
 
 print ("##############################################")
