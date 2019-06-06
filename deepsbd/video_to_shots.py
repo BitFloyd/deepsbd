@@ -9,6 +9,7 @@ from keras.models import load_model
 from tqdm import tqdm
 
 from config import cut_detector, grad_detector, grad_n_frames_per_sample, grad_n_threads, cut_n_threads
+from config import cut_confidence_threshold,grad_confidence_threshold
 from framefilter import perform_frame_filtration
 from read_video_cuboids import AppendCUBThread, AppendCUTCUBThread
 
@@ -63,7 +64,7 @@ class VideoToShots:
 
             class_output = prediction[0][0]
 
-            if (class_output > 0.5):
+            if (class_output > cut_confidence_threshold):
                 self.cuts.append(frame)
             else:
                 self.candidates_no_cut.append(frame)
@@ -111,7 +112,7 @@ class VideoToShots:
             class_output = prediction[0][0]
             reg_output = prediction[1][0]
 
-            if (class_output > 0.5):
+            if (class_output > grad_confidence_threshold):
                 self.grads.append(frame_start + np.int(reg_output * grad_n_frames_per_sample))
 
         return True
