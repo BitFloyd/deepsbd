@@ -3,19 +3,22 @@ import time
 
 import numpy as np
 from clockshortenstream.process_video_pkg.frame_reader import Stream
+from clockshortenstream.process_video_pkg.subtitle_processes import SubtitleManager, write_to_subtitle_file
 from moviepy.editor import VideoFileClip
 from keras.models import load_model
 from tqdm import tqdm
 
 from config import cut_detector, grad_detector, grad_n_frames_per_sample, grad_n_threads, cut_n_threads
+from config import cut_confidence_threshold,grad_confidence_threshold
 from framefilter import perform_frame_filtration
 from read_video_cuboids import AppendCUBThread, AppendCUTCUBThread
 
 
 class VideoToShots:
 
-    def __init__(self, path_to_video, verbose=True):
+    def __init__(self, path_to_video, path_to_video_srt, verbose=True):
         self.path_to_video = path_to_video
+        self.path_to_video_srt = path_to_video_srt
         self.candidates = []
         self.cuts = []
         self.grads = []
@@ -61,7 +64,7 @@ class VideoToShots:
 
             class_output = prediction[0][0]
 
-            if (class_output > 0.5):
+            if (class_output > cut_confidence_threshold):
                 self.cuts.append(frame)
             else:
                 self.candidates_no_cut.append(frame)
@@ -109,7 +112,7 @@ class VideoToShots:
             class_output = prediction[0][0]
             reg_output = prediction[1][0]
 
-            if (class_output > 0.5):
+            if (class_output > grad_confidence_threshold):
                 self.grads.append(frame_start + np.int(reg_output * grad_n_frames_per_sample))
 
         return True
@@ -131,6 +134,10 @@ class VideoToShots:
 
         return 'shot_' + str(video_id) + '.mp4'
 
+    def get_srt_name(self, video_id):
+
+        return 'shot_' + str(video_id) + '.srt'
+
     def save_video_as_shots(self, out_path_for_video):
 
         if not (os.path.exists(out_path_for_video)):
@@ -139,6 +146,7 @@ class VideoToShots:
         video_id = 0
 
         video_name = self.get_video_name_from_id(video_id)
+        srt_name = self.get_srt_name(video_id)
 
         fReader = Stream(self.path_to_video, time_resolution=None)
 
@@ -148,17 +156,24 @@ class VideoToShots:
 
         trans_to_write = list(self.full_trans)
 
-        trans_to_write = [-1]+[trans_to_write]
+        trans_to_write = [-1]+trans_to_write
 
         trans_to_write.append(fReader.frameReader.numFrames)
 
+
         for i,j in zip(trans_to_write,trans_to_write[1:]):
 
-            print i,j
-            clip = VideoFileClip(self.path_to_video).subclip(time_resolution*(i+1), time_resolution*(j))
-            clip.write_videofile(video_name)
+            t_start = time_resolution*(i+1)
+            t_end = time_resolution*(j)
+
+            clip = VideoFileClip(self.path_to_video).subclip(t_start,t_end)
+            subclip = SubtitleManager(self.path_to_video_srt).subclip(t_start,t_end,0.0)
+
+            clip.write_videofile(os.path.join(out_path_for_video,video_name))
+            write_to_subtitle_file(subclip,os.path.join(out_path_for_video, srt_name))
+
             video_id += 1
             video_name = self.get_video_name_from_id(video_id)
-
+            srt_name = self.get_srt_name(video_id)
 
         return True
