@@ -40,7 +40,7 @@ def features_from_video(path_to_video):
 
 
 def get_sqnet():
-    sqnet = SqueezeNet(include_top=False,pooling='avg')
+    sqnet = SqueezeNet(include_top=False,pooling='max')
 
     return sqnet
 
@@ -124,6 +124,17 @@ def get_scale_candidates(features_from_scale, frame_indexes_from_scale, a=20):
 
     return list_scale_candidates
 
+def remove_consecutive_candidates_from_scale(scale,candidates):
+
+    list_new = []
+
+    candidates.append(np.inf)
+
+    for i,j in zip(candidates,candidates[1:]):
+        if not ((j-i)<=scale):
+            list_new.append(i)
+
+    return list_new
 
 def perform_frame_filtration(path_to_video):
     list_features, fps = features_from_video(path_to_video)
@@ -139,11 +150,18 @@ def perform_frame_filtration(path_to_video):
         frame_indexes_from_scale = multiscale_sampling(frame_indexes, scale)
 
         candidates_in_scale = get_scale_candidates(features_from_scale, frame_indexes_from_scale, a=fps / 4)
+        candidates_in_scale.sort()
+
+        if(scale<scale_merge_interval):
+            candidates_in_scale = remove_consecutive_candidates_from_scale(scale,candidates_in_scale)
 
         candidates_scale_dict[scale] = candidates_in_scale
 
     list_frame_candidates = merge_scales(candidates_scale_dict, interval=scale_merge_interval)
-
+    print "----------------------------------"
+    print "LIST_FRAME_CANDIDATES:"
+    print "----------------------------------"
+    print list_frame_candidates
     return list_frame_candidates
 
 

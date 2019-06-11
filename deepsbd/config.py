@@ -13,7 +13,7 @@ batch_size = 32
 cut_detector = os.path.join(os.path.split(os.path.realpath(__file__))[0], 'cut_detector.h5')
 num_iteration_in_one_epoch = 1e3
 cut_n_threads = multiprocessing.cpu_count() - 3
-cut_confidence_threshold = 0.25
+cut_confidence_threshold = 0.35
 
 # ================================== #
 # Grad Detector
