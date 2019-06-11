@@ -124,17 +124,18 @@ def get_scale_candidates(features_from_scale, frame_indexes_from_scale, a=20):
 
     return list_scale_candidates
 
-def remove_consecutive_candidates_from_scale(scale,candidates):
 
-    list_new = []
+def remove_consecutive_candidates_from_scale(scale, candidates):
 
-    candidates.append(np.inf)
+    i = 0
+    while i < len(candidates)-1:
+        if ((candidates[i + 1] - candidates[i]) <= scale):
+            candidates.pop(i + 1)
+            continue
+        else:
+            i += 1
 
-    for i,j in zip(candidates,candidates[1:]):
-        if not ((j-i)<=scale):
-            list_new.append(i)
-
-    return list_new
+    return candidates
 
 def perform_frame_filtration(path_to_video):
     list_features, fps = features_from_video(path_to_video)
