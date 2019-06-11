@@ -2,6 +2,13 @@
 <project version="4">
   <component name="PublishConfigData" serverName="rocket">
     <serverData>
+      <paths name="puck">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/usr/local/data/sejacob/PhD_Repo/deepsbd" local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
       <paths name="rocket">
         <serverdata>
           <mappings>
