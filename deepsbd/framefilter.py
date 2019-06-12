@@ -4,7 +4,6 @@ from config import scale_merge_interval, frame_size
 import cv2
 from clockshortenstream.process_video_pkg.frame_reader import Stream
 from keras.applications.imagenet_utils import preprocess_input
-from keras.applications.resnet50 import ResNet50
 from keras_squeezenet import SqueezeNet
 from matplotlib.backends.backend_pdf import PdfPages
 from scipy.spatial.distance import cosine
@@ -40,7 +39,7 @@ def features_from_video(path_to_video):
 
 
 def get_sqnet():
-    sqnet = SqueezeNet(include_top=False,pooling='avg')
+    sqnet = SqueezeNet(include_top=False,pooling='max')
 
     return sqnet
 
@@ -125,6 +124,18 @@ def get_scale_candidates(features_from_scale, frame_indexes_from_scale, a=20):
     return list_scale_candidates
 
 
+def remove_consecutive_candidates_from_scale(scale, candidates):
+
+    i = 0
+    while i < len(candidates)-1:
+        if ((candidates[i + 1] - candidates[i]) <= scale):
+            candidates.pop(i + 1)
+            continue
+        else:
+            i += 1
+
+    return candidates
+
 def perform_frame_filtration(path_to_video):
     list_features, fps = features_from_video(path_to_video)
 
@@ -139,11 +150,18 @@ def perform_frame_filtration(path_to_video):
         frame_indexes_from_scale = multiscale_sampling(frame_indexes, scale)
 
         candidates_in_scale = get_scale_candidates(features_from_scale, frame_indexes_from_scale, a=fps / 4)
+        candidates_in_scale.sort()
+
+        if(scale<scale_merge_interval):
+            candidates_in_scale = remove_consecutive_candidates_from_scale(scale,candidates_in_scale)
 
         candidates_scale_dict[scale] = candidates_in_scale
 
     list_frame_candidates = merge_scales(candidates_scale_dict, interval=scale_merge_interval)
-
+    print "----------------------------------"
+    print "LIST_FRAME_CANDIDATES:"
+    print "----------------------------------"
+    print list_frame_candidates
     return list_frame_candidates
 
 
