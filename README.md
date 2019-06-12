@@ -31,8 +31,11 @@ Usage Example:
 from deepsbd.video_to_shots import VideoToShots
 
 video_path = 'video.mp4'
+video_srt_path = 'video.srt'
 directory_to_save_shots_in = 'shots'
-vts = VideoToShots(video_path)
+# Step 3: Convert video to shots
+vts = VideoToShots(path_to_video=video_path, path_to_video_srt=video_srt_path)
+
 
 #Perform fit
 vts.fit()
