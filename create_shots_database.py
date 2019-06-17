@@ -66,7 +66,7 @@ for video in list_of_videos:
     except Exception as e:
         with open('./error_log.txt', 'a+') as f:
             f.write("----------------------------------\n")
-            f.write(s='{filename} did not work because of this error: {error} \n'.format(filename=filename_short,error=e))
+            f.write('{filename} did not work because of this error: {error} \n'.format(filename=filename_short,error=e))
             f.write("-----------------------------------\n")
 
     #Step 4: Cleanup the residual files created from each video.
