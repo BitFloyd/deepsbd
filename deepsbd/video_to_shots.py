@@ -167,10 +167,11 @@ class VideoToShots:
             t_end = time_resolution*(j)
 
             clip = VideoFileClip(self.path_to_video).subclip(t_start,t_end)
-            subclip = SubtitleManager(self.path_to_video_srt).subclip(t_start,t_end,0.0)
+            clip.write_videofile(os.path.join(out_path_for_video, video_name))
 
-            clip.write_videofile(os.path.join(out_path_for_video,video_name))
-            write_to_subtitle_file(subclip,os.path.join(out_path_for_video, srt_name))
+            if(self.path_to_video_srt is not None):
+                subclip = SubtitleManager(self.path_to_video_srt).subclip(t_start,t_end,0.0)
+                write_to_subtitle_file(subclip,os.path.join(out_path_for_video, srt_name))
 
             video_id += 1
             video_name = self.get_video_name_from_id(video_id)

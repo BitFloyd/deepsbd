@@ -45,23 +45,29 @@ for video in list_of_videos:
     short_video = os.path.join(scrap_directory,'shortened_video.mp4')
     short_srt = os.path.join(scrap_directory,'short_srt.srt')
 
-    svs = ShortenVideoStream(path_to_input_video=mp4_file, path_to_input_srt=srt_file, commercial_removed=False)
-    svs.shorten_video_stream(path_to_output_video=short_video, path_to_output_srt=short_srt)
+    try:
+        svs = ShortenVideoStream(path_to_input_video=mp4_file, path_to_input_srt=srt_file, commercial_removed=False)
+        svs.shorten_video_stream(path_to_output_video=short_video, path_to_output_srt=short_srt)
 
-    #Step 3: Convert video to shots
-    vts = VideoToShots(path_to_video=short_video,path_to_video_srt=short_srt)
-    vts.fit()
+        #Step 3: Convert video to shots
+        vts = VideoToShots(path_to_video=short_video,path_to_video_srt=short_srt)
+        vts.fit()
 
-    print ("##############################################")
-    print ("FULL_TRANS:")
-    print (vts.full_trans)
-    print ("##############################################")
+        print ("##############################################")
+        print ("FULL_TRANS:")
+        print (vts.full_trans)
+        print ("##############################################")
 
-    _, filename_short = os.path.split(filename)
-    directory_to_save_clips = os.path.join(clips_database_directory, filename_short)
-    os.mkdir(directory_to_save_clips)
+        _, filename_short = os.path.split(filename)
+        directory_to_save_clips = os.path.join(clips_database_directory, filename_short)
+        os.mkdir(directory_to_save_clips)
 
-    vts.save_video_as_shots(directory_to_save_clips)
+        vts.save_video_as_shots(directory_to_save_clips)
+    except Exception as e:
+        with open('./error_log.txt', 'a+') as f:
+            f.write("----------------------------------\n")
+            f.write(s='{filename} did not work because of this error: {error} \n'.format(filename=filename_short,error=e))
+            f.write("-----------------------------------\n")
 
     #Step 4: Cleanup the residual files created from each video.
     remove_residual_commands = 'rm -rf {scrap_folder}/*'.format(scrap_folder=scrap_directory)

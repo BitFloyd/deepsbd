@@ -31,7 +31,7 @@ Usage Example:
 from deepsbd.video_to_shots import VideoToShots
 
 video_path = 'video.mp4'
-video_srt_path = 'video.srt'
+video_srt_path = 'video.srt' #Set this to None if you dont need to crop subtitles.
 directory_to_save_shots_in = 'shots'
 # Step 3: Convert video to shots
 vts = VideoToShots(path_to_video=video_path, path_to_video_srt=video_srt_path)
